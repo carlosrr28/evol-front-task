@@ -17,4 +17,10 @@ export interface TaskState {
 export interface TaskList {
   tasks: Task[];
 }
+
+export interface TaskTableProps {
+  tasks: Task[];
+  loading: boolean;
+  error: string | null;
+}
   

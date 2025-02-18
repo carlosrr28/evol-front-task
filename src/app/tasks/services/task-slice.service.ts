@@ -15,6 +15,27 @@ export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
   return response.data;
 });
 
+// Thunk para agregar una nueva tarea
+export const addTask = createAsyncThunk(
+  "tasks/addTask",
+  async (newTask: Task) => {
+    const { id, ...taskWithoutId } = newTask;  // Desestructuración para eliminar el `id`
+    
+    const response = await axios.post<Task>("http://localhost:3000/tasks", taskWithoutId);  // Enviar la tarea sin `id`
+    return response.data;
+  }
+);
+
+// Thunk para actualizar una tarea existente
+export const updateTask = createAsyncThunk(
+  "tasks/updateTask",
+  async (updatedTask: Task) => {
+    const response = await axios.put<Task>(`http://localhost:3000/tasks/${updatedTask.id}`, updatedTask);
+    return response.data;
+  }
+);
+
+
 const taskSlice = createSlice({
   name: "tasks",
   initialState,
