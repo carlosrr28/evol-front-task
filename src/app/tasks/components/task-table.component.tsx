@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { Task, TaskTableProps } from "../interfaces/task.interface";
 import { Pencil, Trash } from "lucide-react";
 import TaskFormModal from "./task-form-modal.component";
+import TaskDeleteModal from "./task-delete-modal.component";
 
 const TaskTable: FC<TaskTableProps> = ({ tasks, loading, error }) => {
   
@@ -10,20 +11,25 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, loading, error }) => {
     return dateObj.toLocaleDateString("es-ES");
   };
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<Task>({
-    id: 0,
-    title: "",
-    description: "",
-    completed: false,
-    tags: [],
-    dueDate: "",
-  });
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  const openUpdate = (task: Task) => {
-    setSelectedTask({...task});
-    setIsOpen(true);
+  const openModal = (task: Task, modal: string): void => {
+    switch(modal){
+      case "update": 
+        setSelectedTask({...task});
+        setIsUpdateModalOpen(true);
+        break;
+      case "delete":
+        setSelectedTask({...task});
+        setIsDeleteModalOpen(true);
+        break;
+      }
   }
+
+  const closeUpdateModal = () => setIsUpdateModalOpen(false);
+  const closeDeleteModal = () => setIsDeleteModalOpen(false);
 
   return (
     <div className="flex items-center justify-center mb-20 mt-2">
@@ -52,12 +58,13 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, loading, error }) => {
               <td className="px-6 py-3 text-center">{formatDate(task.dueDate)}</td>
               <td className="px-6 py-3 text-center">
                 <button
-                  onClick={() => openUpdate(task)}
-                  className="p-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition"
+                  onClick={() => openModal(task, 'update')}
+                  className="p-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition mr-1"
                 >
                   <Pencil className="w-5 h-5" />
                 </button>
                 <button
+                  onClick={() => openModal(task, 'delete')}
                   className="p-2 rounded-lg bg-red-500 text-white"
                 >
                   <Trash className="w-5 h-5" />
@@ -68,13 +75,11 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, loading, error }) => {
         </tbody>
       </table>
     )}
-    {isOpen && (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-0.5">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-180">
-          <TaskFormModal task={selectedTask}></TaskFormModal>
-          <button onClick={() => setIsOpen(false)} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Cancelar</button>
-        </div>
-      </div>
+    {isUpdateModalOpen && selectedTask && (
+      <TaskFormModal task={selectedTask} onClose={closeUpdateModal}/>
+    )}
+    {isDeleteModalOpen && selectedTask && (
+        <TaskDeleteModal task={selectedTask} onClose={closeDeleteModal} />
     )}
     </div>
   );

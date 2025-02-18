@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { Task, TaskState } from "../../tasks/interfaces/task.interface";
 
@@ -35,6 +35,26 @@ export const updateTask = createAsyncThunk(
   }
 );
 
+// Thunk para eliminar una tarea
+export const deleteTask = createAsyncThunk(
+  "tasks/deleteTask",
+  async (taskId: number) => {
+      try {
+          const response = await axios.delete(`http://localhost:3000/tasks/${taskId}`);
+          // Importante: Devuelve el ID de la tarea eliminada. Esto estará en la carga útil de la acción fulfilled.
+          return taskId; // O response.data si tu API devuelve algo más útil
+      } catch (error) {
+        
+        console.error(error);
+        
+        // Maneja los errores apropiadamente. Esto creará una acción rejected.
+          //return thunkAPI.rejectWithValue(error); // Recomendado para un mejor manejo de errores
+          return 0;
+      }
+  }
+);
+
+
 
 const taskSlice = createSlice({
   name: "tasks",
@@ -53,6 +73,18 @@ const taskSlice = createSlice({
       .addCase(fetchTasks.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Error fetching tasks";
+      })
+      // Eliminar tarea
+      .addCase(deleteTask.fulfilled, (state, action: PayloadAction<number>) => {
+        // Filtrar y eliminar la tarea por el ID
+        state.tasks = state.tasks.filter((task) => task.id !== action.payload);
+      })
+      // Actualizar tarea
+      .addCase(updateTask.fulfilled, (state, action: PayloadAction<Task>) => {
+        const index = state.tasks.findIndex((task) => task.id === action.payload.id);
+        if (index !== -1) {
+          state.tasks[index] = action.payload;
+        }
       });
   },
 });
