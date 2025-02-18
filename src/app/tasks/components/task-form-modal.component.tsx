@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { addTask, updateTask } from "../services/task-slice.service";
 import { Task } from "../interfaces/task.interface";
 import { AppDispatch } from "../../store/store";
-import { ArrowBigLeft, CircleFadingPlus, Save } from "lucide-react";
+import { ArrowBigLeft, Save } from "lucide-react";
 import { RiCheckboxBlankCircleFill, RiCheckboxCircleFill } from "react-icons/ri"; // Iconos para "No Completada" y "Completada"
 
 interface TaskFormModalProps {

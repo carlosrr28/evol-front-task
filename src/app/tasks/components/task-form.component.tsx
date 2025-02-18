@@ -1,8 +1,4 @@
 import { FC, useState } from "react";
-import { useDispatch } from "react-redux";
-import { addTask } from "../services/task-slice.service";
-import { Task } from "../interfaces/task.interface";
-import { AppDispatch } from "../../store/store";
 import { CircleFadingPlus } from "lucide-react";
 import TaskFormModal from "./task-form-modal.component";
 
@@ -19,18 +15,8 @@ const TaskForm: FC = () => {
     dueDate: "",
   }
 
-  const openModal = (): void => {
-    setIsUpdateModalOpen(true);
-  }
-
-  
+  const openModal = (): void => setIsUpdateModalOpen(true);
   const closeUpdateModal = () => setIsUpdateModalOpen(false);
-
-
-
-  const dispatch = useDispatch<AppDispatch>();
-
-  const handleSubmit = (values: Task) => dispatch(addTask(values));
 
   return (
     <>
