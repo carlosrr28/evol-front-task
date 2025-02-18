@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { Task, TaskState } from "../../tasks/interfaces/task.interface";
 
-// Estado inicial
 const initialState: TaskState = {
   tasks: [],
   loading: false,
@@ -41,20 +40,13 @@ export const deleteTask = createAsyncThunk(
   async (taskId: number) => {
       try {
           const response = await axios.delete(`http://localhost:3000/tasks/${taskId}`);
-          // Importante: Devuelve el ID de la tarea eliminada. Esto estará en la carga útil de la acción fulfilled.
-          return taskId; // O response.data si tu API devuelve algo más útil
+          return taskId;
       } catch (error) {
-        
         console.error(error);
-        
-        // Maneja los errores apropiadamente. Esto creará una acción rejected.
-          //return thunkAPI.rejectWithValue(error); // Recomendado para un mejor manejo de errores
           return 0;
       }
   }
 );
-
-
 
 const taskSlice = createSlice({
   name: "tasks",

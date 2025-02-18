@@ -1,8 +1,9 @@
 import { FC } from "react";
 import { useDispatch } from "react-redux";
-import { deleteTask, updateTask } from "../services/task-slice.service";
+import { deleteTask } from "../services/task-slice.service";
 import { Task } from "../interfaces/task.interface";
 import { AppDispatch } from "../../store/store";
+import { ArrowBigLeft, Trash2 } from "lucide-react";
 
 interface DeleteTaskModalProps {
   task: Task;
@@ -30,18 +31,18 @@ const TaskDeleteModal: FC<DeleteTaskModalProps> = ({ task, onClose }) => {
           <p className="font-bold">Descripción:</p>
           <p>{task.description}</p>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-center">
           <button
             onClick={() => handleDelete(task)}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-800 flex justify-center mr-4"
           >
-            Eliminar
+            <Trash2 className="w-5 h-5 mr-2" />Eliminar
           </button>
           <button
             onClick={onClose}
-            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition"
+            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 flex justify-center"
           >
-            Cancelar
+            <ArrowBigLeft className="w-5 h-5 mr-2" />Cancelar
           </button>
         </div>
       </div>

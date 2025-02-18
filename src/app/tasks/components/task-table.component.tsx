@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { Task, TaskTableProps } from "../interfaces/task.interface";
-import { Pencil, Trash } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import TaskFormModal from "./task-form-modal.component";
 import TaskDeleteModal from "./task-delete-modal.component";
 
@@ -67,7 +67,7 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, loading, error }) => {
                   onClick={() => openModal(task, 'delete')}
                   className="p-2 rounded-lg bg-red-500 text-white"
                 >
-                  <Trash className="w-5 h-5" />
+                  <Trash2 className="w-5 h-5" />
                 </button>
               </td>
             </tr>
@@ -79,7 +79,7 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, loading, error }) => {
       <TaskFormModal task={selectedTask} onClose={closeUpdateModal}/>
     )}
     {isDeleteModalOpen && selectedTask && (
-        <TaskDeleteModal task={selectedTask} onClose={closeDeleteModal} />
+      <TaskDeleteModal task={selectedTask} onClose={closeDeleteModal} />
     )}
     </div>
   );

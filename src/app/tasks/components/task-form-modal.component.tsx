@@ -1,10 +1,11 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useDispatch } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { addTask, updateTask } from "../services/task-slice.service";
+import { updateTask } from "../services/task-slice.service";
 import { Task } from "../interfaces/task.interface";
 import { AppDispatch } from "../../store/store";
+import { ArrowBigLeft, Save } from "lucide-react";
 
 interface TaskFormModalProps {
   task: Task;
@@ -12,6 +13,15 @@ interface TaskFormModalProps {
 }
 
 const TaskFormModal: FC<TaskFormModalProps> = ({ task, onClose }) => {
+
+  const initialValue = {
+    id: task.id,
+    title: task.title,
+    description: task.description,
+    completed: task.completed,
+    tags: task.tags,
+    dueDate: task.dueDate ? task.dueDate.split("T")[0] : "",
+  }
 
   const validationSchema = Yup.object({
     title: Yup.string().required("El título es obligatorio"),
@@ -31,22 +41,14 @@ const TaskFormModal: FC<TaskFormModalProps> = ({ task, onClose }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-0.5">
         <div className="bg-white p-6 rounded-lg shadow-lg w-180">
+          <h1 className="text-3xl font-bold text-center mb-6 mt-6">Actualizar tarea</h1>
         <Formik
-          initialValues={{
-          id: task.id,
-          title: task.title,
-          description: task.description,
-          completed: task.completed,
-          tags: task.tags,
-          dueDate: task.dueDate ? task.dueDate.split("T")[0] : "",
-        }}
+          initialValues={initialValue}
           validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
+          onSubmit={handleSubmit}>
           {({ setFieldValue }) => (
-          
+
           <Form className="max-w-4xl mx-auto space-y-6 p-6">
-            
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {/* Título */}
               <div>
@@ -108,32 +110,36 @@ const TaskFormModal: FC<TaskFormModalProps> = ({ task, onClose }) => {
                 className="mt-1 p-2 w-full border border-gray-300 rounded-md"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const tags = e.target.value
-                    .split(",") // Separar por comas
-                    .map((tag) => tag.trim()) // Eliminar espacios extra
-                    .filter((tag) => tag); // Eliminar elementos vacíos
-                  setFieldValue("tags", tags); // Actualizar Formik con el array
+                    .split(",")
+                    .map((tag) => tag.trim())
+                    .filter((tag) => tag);
+                  setFieldValue("tags", tags);
                 }}
               />
               <ErrorMessage name="tags" component="div" className="text-red-500 text-sm" />
             </div>
 
-            <div>
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={onClose}
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 flex items-center"
+                >
+                <ArrowBigLeft className="mr-2"/>
+                Cancelar
+              </button>
+              
               <button
                 type="submit"
-                className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
-              >
+                className="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-800 flex items-center"
+                >
+                <Save className="mr-2" />
                 Guardar edición
               </button>
+              
             </div>
           </Form>
           )}
         </Formik>
-        <button
-            onClick={onClose}
-            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition"
-          >
-            Cancelar
-          </button>
       </div>
     </div>
   );

@@ -19,7 +19,8 @@ const TaskList = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-center mb-6 mt-6">Lista de tareas</h1>
+      <h1 className="text-3xl font-bold text-center mb-6 mt-6 text-gray-700">Lista de tareas</h1>
+      <hr className="text-gray-400" />
       <TaskForm />
       <TaskTable tasks={tasks} loading={loading} error={error} />
     </div>
