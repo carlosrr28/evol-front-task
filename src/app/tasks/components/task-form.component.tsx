@@ -1,138 +1,61 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Formik, Field, Form, ErrorMessage } from "formik";
-import * as Yup from "yup";
 import { addTask } from "../services/task-slice.service";
 import { Task } from "../interfaces/task.interface";
 import { AppDispatch } from "../../store/store";
-import { Eraser, Plus } from "lucide-react";
+import { CircleFadingPlus } from "lucide-react";
+import TaskFormModal from "./task-form-modal.component";
 
 const TaskForm: FC = () => {
 
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  
   const initialValue = {
-    id: 0,
+    id: -1,
     title: "",
     description: "",
     completed: false,
     tags: [],
     dueDate: "",
   }
-  const validationSchema = Yup.object({
-    title: Yup.string().required("El título es obligatorio"),
-    description: Yup.string().required("La descripción es obligatoria"),
-    dueDate: Yup.date().required("La fecha de vencimiento es obligatoria").nullable(),
-    tags: Yup.array().of(Yup.string().required("Cada etiqueta debe ser un texto válido")).min(1, "Debe agregar al menos una etiqueta"),
-    completed: Yup.boolean().required("Debe especificar si la tarea está completada o no"),
-  });
+
+  const openModal = (): void => {
+    setIsUpdateModalOpen(true);
+  }
+
+  
+  const closeUpdateModal = () => setIsUpdateModalOpen(false);
+
+
 
   const dispatch = useDispatch<AppDispatch>();
 
   const handleSubmit = (values: Task) => dispatch(addTask(values));
 
   return (
-    <Formik
-      initialValues={initialValue}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-      validateOnChange={false} // Desactivar validaciones en el cambio
-      validateOnBlur={false} // Desactivar validaciones en el blur
-    >
-      {({ setFieldValue, resetForm, validateForm }) => (
-        <Form className="max-w-4xl mx-auto space-y-6 p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {/* Título */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700">Título</label>
-              <Field
-                type="text"
-                name="title"
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-              />
-              <ErrorMessage name="title" component="div" className="text-red-500 text-sm" />
-            </div>
+    <>
+    {isUpdateModalOpen && (
+      <TaskFormModal task={initialValue} onClose={closeUpdateModal}/>
+    )}
 
-            {/* Descripción */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700">Descripción</label>
-              <Field
-                as="textarea"
-                name="description"
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-              />
-              <ErrorMessage name="description" component="div" className="text-red-500 text-sm" />
-            </div>
-          </div>
-
-          {/* Fecha de Vencimiento y Estado de la Tarea */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {/* Fecha de Vencimiento */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700">Fecha de Vencimiento</label>
-              <Field
-                type="date"
-                name="dueDate"
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-              />
-              <ErrorMessage name="dueDate" component="div" className="text-red-500 text-sm" />
-            </div>
-
-            {/* Estado de la Tarea */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700">Estado de la Tarea</label>
-              <Field
-                as="select"
-                name="completed"
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-              >
-                <option value="false">No Completada</option>
-                <option value="true">Completada</option>
-              </Field>
-              <ErrorMessage name="completed" component="div" className="text-red-500 text-sm" />
-            </div>
-          </div>
-
-          {/* Etiquetas */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700">Etiquetas (separadas por comas)</label>
-            <Field
-              type="text"
-              name="tags"
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                const tags = e.target.value
-                  .split(",")
-                  .map((tag) => tag.trim())
-                  .filter((tag) => tag);
-
-                setFieldValue("tags", tags);
-              }}
-            />
-            <ErrorMessage name="tags" component="div" className="text-red-500 text-sm" />
-          </div>
-
-          <div className="flex items-center justify-center space-x-4">
-            <button
-              type="submit"
-              className="py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 flex items-center"
-            >
-              <Plus className="mr-2" />
-              Agregar Tarea
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                resetForm();
-                validateForm(); // Asegura que las validaciones no se disparen en el reset
-              }}
-              className="py-2 px-4 bg-gray-500 text-white font-semibold rounded-md hover:bg-gray-600 flex items-center"
-            >
-              <Eraser className="mr-2" />
-              Limpiar
-            </button>
-          </div>
-        </Form>
-      )}
-    </Formik>
+    <button
+          className="fixed
+                    bottom-6
+                    right-6
+                    p-4
+                    bg-blue-600
+                    text-white
+                    rounded-full
+                    shadow-lg
+                    hover:bg-blue-700
+                    focus:outline-none
+                    flex
+                    justify-center"
+            onClick={() => openModal()}
+        >
+          <CircleFadingPlus size={24} className="mr-2" />Agregar nueva tarea
+    </button>
+    </>
   );
 };
 

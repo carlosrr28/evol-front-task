@@ -54,29 +54,41 @@ const taskSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      //Inicia la carga de tareas (cambia el estado a "cargando")
       .addCase(fetchTasks.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.loading = true;  // Indica que se está cargando la data
+        state.error = null;  // Resetea cualquier error previo
       })
+      
+      //Obtiene las tareas exitosamente y las almacena en el estado
       .addCase(fetchTasks.fulfilled, (state, action) => {
-        state.loading = false;
-        state.tasks = action.payload;
+        state.loading = false;  // Finaliza la carga
+        state.tasks = action.payload;  // Guarda las tareas obtenidas del backend
       })
+      
+      //Maneja un error al obtener las tareas
       .addCase(fetchTasks.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Error fetching tasks";
+        state.loading = false;  // Finaliza la carga
+        state.error = action.error.message || "Error fetching tasks";  // Guarda el mensaje de error
       })
-      // Eliminar tarea
+      
+      //Elimina una tarea de la lista después de que el backend la borra
       .addCase(deleteTask.fulfilled, (state, action: PayloadAction<number>) => {
-        // Filtrar y eliminar la tarea por el ID
-        state.tasks = state.tasks.filter((task) => task.id !== action.payload);
+        state.tasks = state.tasks.filter((task) => task.id !== action.payload);  
+        // Filtra la lista para eliminar la tarea con el ID recibido
       })
-      // Actualizar tarea
+      
+      //Actualiza una tarea en el estado después de que el backend la modifica
       .addCase(updateTask.fulfilled, (state, action: PayloadAction<Task>) => {
         const index = state.tasks.findIndex((task) => task.id === action.payload.id);
         if (index !== -1) {
-          state.tasks[index] = action.payload;
+          state.tasks[index] = action.payload;  // Reemplaza la tarea existente con la nueva versión
         }
+      })
+      
+      //Agrega una nueva tarea a la lista después de recibir confirmación del backend
+      .addCase(addTask.fulfilled, (state, action: PayloadAction<Task>) => {
+        state.tasks.push(action.payload);  // Inserta la nueva tarea en el array de tareas
       });
   },
 });
