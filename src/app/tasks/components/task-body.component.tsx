@@ -10,9 +10,29 @@ const TaskBody: FC<TaskTableProps> = ({ tasks, loading, error, toggleSort }) => 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<"date" | "title" | null>(null);
+  const [idSelected, setIdSelected] = useState(0);
 
-  const closeUpdateModal = () => setIsUpdateModalOpen(false);
-  const closeDeleteModal = () => setIsDeleteModalOpen(false);
+  const closeUpdateModal = () => {
+
+    setIsUpdateModalOpen(false);
+    //const updatedTask = tasks.find(task => task.id === idSelected) || null;
+    setSelectedTask(null);
+    //setSelectedTask(updatedTask);
+  }
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setSelectedTask(null);
+  };
+  
+
+  const onSelectTask = (taskSelect:Task) => {
+    
+    setSelectedTask(taskSelect);
+    setIdSelected(taskSelect.id);
+    
+  }
+
   const openModal = (task: Task, modal: string): void => {
     switch(modal){
       case "update": 
@@ -72,7 +92,7 @@ const TaskBody: FC<TaskTableProps> = ({ tasks, loading, error, toggleSort }) => 
                 ? "bg-blue-500 text-white"
                 : "bg-white hover:bg-gray-300"
               }`}
-              onClick={() => setSelectedTask(task)}
+              onClick={() => onSelectTask(task)}
               >
                 {task.title} 
               </li>

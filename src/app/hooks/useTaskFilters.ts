@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Task } from "../interfaces/task.interface";
+import { Task } from "../tasks/interfaces/task.interface";
 
 const useTaskFilters = (tasks: Task[]) => {
   const [filter, setFilter] = useState<'all' | 'completed' | 'notCompleted'>('all');
