@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { Task, TaskState } from "../../tasks/interfaces/task.interface";
+import { environment } from '../../../../environments/environments';
 
 const initialState: TaskState = {
   tasks: [],
@@ -10,7 +11,7 @@ const initialState: TaskState = {
 
 // Thunk para obtener tareas desde el backend
 export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
-  const response = await axios.get<Task[]>("http://localhost:3000/tasks");
+  const response = await axios.get<Task[]>(environment.BaseUrl);
   return response.data;
 });
 
@@ -20,7 +21,7 @@ export const addTask = createAsyncThunk(
   async (newTask: Task) => {
     
     const { id, ...taskWithoutId } = newTask;
-    const response = await axios.post<Task>("http://localhost:3000/tasks", taskWithoutId);  // Enviar la tarea sin `id`
+    const response = await axios.post<Task>(environment.BaseUrl, taskWithoutId);  // Enviar la tarea sin `id`
     return response.data;
   }
 );
@@ -30,7 +31,7 @@ export const updateTask = createAsyncThunk(
   "tasks/updateTask",
   async (updatedTask: Task) => {
     console.log(updatedTask);
-    const response = await axios.put<Task>(`http://localhost:3000/tasks/${updatedTask.id}`, updatedTask);
+    const response = await axios.put<Task>(`${environment.BaseUrl}/${updatedTask.id}`, updatedTask);
     return response.data;
   }
 );
@@ -40,7 +41,7 @@ export const deleteTask = createAsyncThunk(
   "tasks/deleteTask",
   async (taskId: number) => {
       try {
-          const response = await axios.delete(`http://localhost:3000/tasks/${taskId}`);
+          const response = await axios.delete(`${environment.BaseUrl}/${taskId}`);
           return taskId;
       } catch (error) {
         console.error(error);
