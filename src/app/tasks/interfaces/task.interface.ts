@@ -5,6 +5,8 @@ export interface Task {
     completed: boolean;
     tags: string[];
     dueDate: string;
+    createdAt?: string;
+    updatedAt?: string;
   }
 
 export interface TaskState {
