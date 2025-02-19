@@ -1,11 +1,10 @@
-// TaskList.tsx
 import { FC, useState } from "react";
 import { Task, TaskTableProps } from "../interfaces/task.interface";
 import TaskFormModal from "./task-form-modal.component";
 import TaskDeleteModal from "./task-delete-modal.component";
 import { Pencil, Trash2 } from "lucide-react";
 
-const TaskBady: FC<TaskTableProps> = ({ tasks, loading, error }) => {
+const TaskBody: FC<TaskTableProps> = ({ tasks, loading, error }) => {
 
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -123,4 +122,4 @@ const TaskBady: FC<TaskTableProps> = ({ tasks, loading, error }) => {
   );
 };
 
-export default TaskBady;
+export default TaskBody;

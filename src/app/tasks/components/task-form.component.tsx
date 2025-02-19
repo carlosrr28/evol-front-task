@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import { CircleFadingPlus } from "lucide-react";
 import TaskFormModal from "./task-form-modal.component";
 
-const TaskForm: FC = () => {
+const TaskAddButton: FC = () => {
 
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   
@@ -45,4 +45,4 @@ const TaskForm: FC = () => {
   );
 };
 
-export default TaskForm;
+export default TaskAddButton;

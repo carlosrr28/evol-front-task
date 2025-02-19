@@ -18,7 +18,8 @@ export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
 export const addTask = createAsyncThunk(
   "tasks/addTask",
   async (newTask: Task) => {
-    const { id, ...taskWithoutId } = newTask;  // Desestructuración para eliminar el `id`
+    
+    const { id, ...taskWithoutId } = newTask;
     const response = await axios.post<Task>("http://localhost:3000/tasks", taskWithoutId);  // Enviar la tarea sin `id`
     return response.data;
   }
@@ -28,6 +29,7 @@ export const addTask = createAsyncThunk(
 export const updateTask = createAsyncThunk(
   "tasks/updateTask",
   async (updatedTask: Task) => {
+    console.log(updatedTask);
     const response = await axios.put<Task>(`http://localhost:3000/tasks/${updatedTask.id}`, updatedTask);
     return response.data;
   }
