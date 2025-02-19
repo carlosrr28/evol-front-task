@@ -24,7 +24,7 @@ Antes de comenzar, asegúrese de tener instalados los siguientes programas:
 
 3. Iniciar el servidor:
    ```sh
-   npm run start
+   npm run dev
    ```
 
 2. Verifica que el servidor esté corriendo en `http://localhost:5173/`
