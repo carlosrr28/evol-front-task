@@ -2,13 +2,14 @@ import { FC, useState } from "react";
 import { Task, TaskTableProps } from "../interfaces/task.interface";
 import TaskFormModal from "./task-form-modal.component";
 import TaskDeleteModal from "./task-delete-modal.component";
-import { Pencil, Trash2 } from "lucide-react";
+import { ArrowDownUp, CalendarCheck, Keyboard, Pencil, Trash2 } from "lucide-react";
 
-const TaskBody: FC<TaskTableProps> = ({ tasks, loading, error }) => {
+const TaskBody: FC<TaskTableProps> = ({ tasks, loading, error, toggleSort }) => {
 
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState<"date" | "title" | null>(null);
 
   const closeUpdateModal = () => setIsUpdateModalOpen(false);
   const closeDeleteModal = () => setIsDeleteModalOpen(false);
@@ -25,6 +26,16 @@ const TaskBody: FC<TaskTableProps> = ({ tasks, loading, error }) => {
       }
   }
 
+  const toggleSortLocal = (criteria: "date" | "title") => {
+    if (selectedFilter === criteria) {
+      setSelectedFilter(null); // Si el filtro ya está activo, desactivarlo
+    } else {
+      setSelectedFilter(criteria); // Si el filtro no está activo, activarlo
+    }
+
+    toggleSort(criteria);
+  };
+
   return (
     <>
     {loading && <p>Cargando lista...</p>}
@@ -33,6 +44,25 @@ const TaskBody: FC<TaskTableProps> = ({ tasks, loading, error }) => {
         {/* Menú lateral */}
         <aside className="w-1/4 bg-gray-200 p-4 overflow-y-auto">
           <h2 className="text-2xl font-bold mb-4">Tareas</h2>
+          <div className="flex space-x-2 mt-4 mb-4">
+            <button
+              className={`${
+                selectedFilter === "date" ? "bg-blue-500 text-white" : "bg-gray-300 text-gray-700"
+              } hover:bg-gray-400 rounded-md px-3 py-1 flex items-center space-x-1 transition-all text-sm`}
+              onClick={() => toggleSortLocal("date")}
+            >
+              <ArrowDownUp /><CalendarCheck />
+            </button>
+            <button
+              className={`${
+                selectedFilter === "title" ? "bg-blue-500 text-white" : "bg-gray-300 text-gray-700"
+              } hover:bg-gray-400 rounded-md px-3 py-1 flex items-center space-x-1 transition-all text-sm`}
+              onClick={() => toggleSortLocal("title")}
+            >
+              <ArrowDownUp /><Keyboard />
+            </button>
+          </div>
+
           <ul>
             {tasks.map((task) => (
               <li

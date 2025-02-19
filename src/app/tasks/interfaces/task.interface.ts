@@ -24,5 +24,6 @@ export interface TaskTableProps {
   tasks: Task[];
   loading: boolean;
   error: string | null;
+  toggleSort: (criteria: "date" | "title") => void; 
 }
   
