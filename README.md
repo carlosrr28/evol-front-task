@@ -31,3 +31,7 @@ Antes de comenzar, asegúrese de tener instalados los siguientes programas:
 
 ---
 
+## Otras configuraciones
+
+Para configurar la URL base del backend ir a environments/environment.ts
+
